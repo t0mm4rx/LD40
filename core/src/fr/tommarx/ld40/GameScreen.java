@@ -2,9 +2,11 @@ package fr.tommarx.ld40;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
 import fr.tommarx.gameengine.Components.Transform;
+import fr.tommarx.gameengine.Game.Draw;
 import fr.tommarx.gameengine.Game.Game;
 import fr.tommarx.gameengine.Game.Screen;
 import fr.tommarx.gameengine.IO.Keys;
@@ -47,7 +49,7 @@ public class GameScreen extends Screen{
     }
 
     public void renderAfter() {
-
+        Draw.text(santa.presents + " presents", Game.getCurrentScreen().camera.position.x - 4, Game.getCurrentScreen().camera.position.y - 4, Color.WHITE, GameClass.font1, GameClass.gl);
     }
 
     public void update() {

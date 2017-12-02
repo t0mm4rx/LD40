@@ -9,6 +9,7 @@ import fr.tommarx.gameengine.Components.BoxBody;
 import fr.tommarx.gameengine.Components.BoxRenderer;
 import fr.tommarx.gameengine.Components.Transform;
 import fr.tommarx.gameengine.Game.AbstractGameObject;
+import fr.tommarx.gameengine.Game.Game;
 
 public class House extends AbstractGameObject{
 
@@ -17,10 +18,14 @@ public class House extends AbstractGameObject{
 
     public House(Vector2 pos) {
         super(new Transform(pos));
+        setLayout(2);
+
         body = new BoxBody(this, 4, 4, BodyDef.BodyType.StaticBody, false);
         addComponent(body);
         box = new BoxRenderer(this, 4, 4, Color.BROWN);
         addComponent(box);
+
+        Game.getCurrentScreen().add(new Mat(new Vector2(pos.cpy().add(0, -2.25f))));
     }
 
     protected void drawBefore() {

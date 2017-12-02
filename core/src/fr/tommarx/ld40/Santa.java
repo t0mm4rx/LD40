@@ -2,7 +2,6 @@ package fr.tommarx.ld40;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
@@ -19,9 +18,12 @@ public class Santa extends AbstractGameObject{
     Body body;
     BoxRenderer box;
     float speed, friction;
+    public int presents;
 
     public Santa(Transform transform) {
         super(transform);
+        setTag("Santa");
+        setLayout(3);
         body = new BoxBody(this, .64f, .64f, BodyDef.BodyType.DynamicBody, false);
         body.getBody().setSleepingAllowed(false);
         body.getBody().setFixedRotation(true);
@@ -30,6 +32,7 @@ public class Santa extends AbstractGameObject{
         addComponent(box);
         speed = .2f;
         friction = 20;
+        presents = 20;
     }
 
     protected void drawBefore() {

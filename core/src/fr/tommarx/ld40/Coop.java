@@ -63,11 +63,17 @@ public class Coop extends AbstractGameObject{
     }
 
     private float getAngle() {
-        float angle = light.getDirection() + (points[currentPoint].cpy().sub(body.getBody().getPosition()).angle() - light.getDirection()) / 10;
-        if (angle < light.getDirection()) {
-            return angle - 330;
-        }
+        /*if (light.getDirection() > 360) {
+            light.setDirection(light.getDirection()-360);
+        }*/
+        //float angle = light.getDirection() + (points[currentPoint].cpy().sub(body.getBody().getPosition()).angle() - light.getDirection()) / 10;
+        float angle = points[currentPoint].cpy().sub(body.getBody().getPosition()).angle();
+        /*if (angle > 360) {
+            angle -= 360;
+        }*/
+
         return angle;
+        /*return points[currentPoint].cpy().sub(body.getBody().getPosition()).nor().angle() - points[currentPoint].angle();*/
     }
 
     private void rayCast() {
@@ -76,9 +82,11 @@ public class Coop extends AbstractGameObject{
                 public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
                     if (Game.debugging)
                         Draw.circle(point.x, point.y, .1f, Color.RED);
-                    if (CollisionsManager.getGameObjectByBody(fixture.getBody()).getClassName().equals("Santa")) {
-                        Game.debug(2, "Saw");
-                        frameSantaSeen++;
+                    if (CollisionsManager.getGameObjectByBody(fixture.getBody()) != null) {
+                        if (CollisionsManager.getGameObjectByBody(fixture.getBody()).getClassName().equals("Santa")) {
+                            Game.debug(2, "Saw");
+                            frameSantaSeen++;
+                        }
                     }
                     return 0;
                 }
