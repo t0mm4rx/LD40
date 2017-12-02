@@ -34,4 +34,13 @@ Père noël avec sa hotte, plus elle est rempli moins il saute haut
     --> Vu RPG, flics avec lampes, décors de ville
 
 Père noël sdf tueur
-    --> Il doit déposer des cadeaux dans des 
+    --> Il doit déposer des cadeaux devant les maisons
+    --> Ennemis : flics, les esquiver ou les shooter
+
+
+Poids handicap
+    --> Sauter
+    --> Courrir
+
+
+Révolution des lutins du père noël, il doit s'échapper avec sa hotte.

@@ -108,4 +108,8 @@ public abstract class AbstractGameObject extends Drawable {
         }
     }
 
+    public String getClassName(){
+        return getClass().getSimpleName();
+    }
+
 }

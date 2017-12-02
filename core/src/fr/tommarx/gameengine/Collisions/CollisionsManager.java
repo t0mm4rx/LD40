@@ -35,7 +35,7 @@ public class CollisionsManager {
         });
     }
 
-    public AbstractGameObject getGameObjectByBody (Body body) {
+    public static AbstractGameObject getGameObjectByBody (Body body) {
         for (AbstractGameObject go : Game.getCurrentScreen().getGameObjects()) {
             if (go.getComponentByClass("CircleBody") != null) {
                 if (((CircleBody)go.getComponentByClass("CircleBody")).getBody().equals(body)) {
