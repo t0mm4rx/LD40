@@ -14,6 +14,7 @@ public class SpriteRenderer extends Component {
     private TextureRegion texture;
     private float width;
     private float height;
+    public boolean isActive = true;
     private boolean flippedX, flippedY;
 
     public SpriteRenderer (AbstractGameObject go, FileHandle texture) {
@@ -28,6 +29,15 @@ public class SpriteRenderer extends Component {
     public SpriteRenderer (AbstractGameObject go, Texture texture) {
         super(go);
         this.texture = new TextureRegion(texture);
+        width = getTexture().getWidth() / 100;
+        height = getTexture().getHeight() / 100;
+        flippedX = false;
+        flippedY = false;
+    }
+
+    public SpriteRenderer (AbstractGameObject go, TextureRegion texture) {
+        super(go);
+        this.texture = texture;
         width = getTexture().getWidth() / 100;
         height = getTexture().getHeight() / 100;
         flippedX = false;
@@ -78,6 +88,17 @@ public class SpriteRenderer extends Component {
         this.offsetY = offsetY;
     }
 
+    public SpriteRenderer (AbstractGameObject go, TextureRegion texture, float offsetX, float offsetY, float width, float height) {
+        super(go);
+        this.texture = texture;
+        this.width = width;
+        this.height = height;
+        flippedX = false;
+        flippedY = false;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+    }
+
 
 
     public void setTexture(TextureRegion texture) {
@@ -89,6 +110,8 @@ public class SpriteRenderer extends Component {
     }
 
     public void render() {
+        if (!isActive)
+            return;
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Game.batch.draw(texture,
@@ -105,6 +128,8 @@ public class SpriteRenderer extends Component {
     }
 
     public void renderInHUD() {
+        if (!isActive)
+            return;
         Game.HUDbatch.draw(texture,
                 getGameObject().getTransform().getPosition().x - width / 2 + offsetX,
                 getGameObject().getTransform().getPosition().y - height / 2 + offsetY,

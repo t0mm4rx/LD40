@@ -7,20 +7,23 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import fr.tommarx.gameengine.Collisions.CollisionsManager;
+import fr.tommarx.gameengine.Components.AnimationManager;
 import fr.tommarx.gameengine.Components.Body;
 import fr.tommarx.gameengine.Components.BoxBody;
-import fr.tommarx.gameengine.Components.BoxRenderer;
 import fr.tommarx.gameengine.Components.ConeLight;
+import fr.tommarx.gameengine.Components.SpriteRenderer;
 import fr.tommarx.gameengine.Components.Transform;
 import fr.tommarx.gameengine.Game.AbstractGameObject;
 import fr.tommarx.gameengine.Game.Draw;
 import fr.tommarx.gameengine.Game.Game;
+import fr.tommarx.gameengine.Util.Animation;
 
 public class Coop extends AbstractGameObject{
 
     private int currentPoint = 1;
     Body body;
-    BoxRenderer box;
+    SpriteRenderer sr, sr2;
+    AnimationManager am;
     float speed;
     Vector2[] points;
     ConeLight light;
@@ -31,9 +34,20 @@ public class Coop extends AbstractGameObject{
         this.points = points;
         body = new BoxBody(this, .64f, .64f, BodyDef.BodyType.KinematicBody, false);
         addComponent(body);
-        box = new BoxRenderer(this, .64f, .64f, Color.BLUE);
-        addComponent(box);
         light = new ConeLight(this, 200, 10, new Color(.7f, .7f, .3f, 1f), 0, 30);
+        addComponent(light);
+
+        sr2 = new SpriteRenderer(this, GameClass.exclamation, -.05f, .8f, .64f, .64f);
+        sr2.isActive = false;
+        addComponent(sr2);
+
+        sr = new SpriteRenderer(this, GameClass.coopWalk[1], 0, 0, 1f, 1f);
+        addComponent(sr);
+        am = new AnimationManager(this, sr, GameClass.coopWalk[1]);
+        am.addAnimation(new Animation(this, GameClass.coopWalk, .16f, true, 1));
+        am.setCurrentAnimation(1);
+        addComponent(am);
+
         speed = 1f;
     }
 
@@ -46,34 +60,27 @@ public class Coop extends AbstractGameObject{
     }
 
     protected void update(float delta) {
-        body.getBody().setLinearVelocity(points[currentPoint].cpy().sub(body.getBody().getPosition()).nor().scl(speed));
-        if (body.getBody().getPosition().dst(points[currentPoint]) < .1f) {
-            if (currentPoint >= points.length -1) {
-                currentPoint = 0;
-            } else {
-                currentPoint++;
+        if (!((GameScreen) Game.getCurrentScreen()).isFinish) {
+            body.getBody().setLinearVelocity(points[currentPoint].cpy().sub(body.getBody().getPosition()).nor().scl(speed));
+            if (body.getBody().getPosition().dst(points[currentPoint]) < .1f) {
+                if (currentPoint >= points.length - 1) {
+                    currentPoint = 0;
+                } else {
+                    currentPoint++;
+                }
             }
-        }
-        light.getLight().setPosition(body.getBody().getPosition());
-        light.setDirection(getAngle());
-        if (frameSantaSeen > 5) {
-
+            light.getLight().setPosition(body.getBody().getPosition());
+            light.setDirection(getAngle());
+        } else {
+            body.getBody().setLinearVelocity(0, 0);
+            am.setCurrentAnimation(-1);
         }
 
     }
 
     private float getAngle() {
-        /*if (light.getDirection() > 360) {
-            light.setDirection(light.getDirection()-360);
-        }*/
-        //float angle = light.getDirection() + (points[currentPoint].cpy().sub(body.getBody().getPosition()).angle() - light.getDirection()) / 10;
         float angle = points[currentPoint].cpy().sub(body.getBody().getPosition()).angle();
-        /*if (angle > 360) {
-            angle -= 360;
-        }*/
-
         return angle;
-        /*return points[currentPoint].cpy().sub(body.getBody().getPosition()).nor().angle() - points[currentPoint].angle();*/
     }
 
     private void rayCast() {
@@ -86,11 +93,16 @@ public class Coop extends AbstractGameObject{
                         if (CollisionsManager.getGameObjectByBody(fixture.getBody()).getClassName().equals("Santa")) {
                             Game.debug(2, "Saw");
                             frameSantaSeen++;
+                            if (frameSantaSeen > 5) {
+                                sr2.isActive = true;
+                                ((Santa)CollisionsManager.getGameObjectByBody(fixture.getBody())).seen();
+                                ((GameScreen) Game.getCurrentScreen()).isFinish = true;
+                            }
                         }
                     }
                     return 0;
                 }
-            }, body.getBody().getPosition().cpy().add(new Vector2(5, 5).setAngle(getAngle() + a)), body.getBody().getPosition());
+            },  body.getBody().getPosition(), body.getBody().getPosition().cpy().add(new Vector2(4, 4).setAngle(getAngle() + a)));
             if (Game.debugging)
                 Draw.line(body.getBody().getPosition(), body.getBody().getPosition().cpy().add(new Vector2(5, 5).setAngle(getAngle() + a)), Color.WHITE);
         }

@@ -70,10 +70,10 @@ public class AnimationManager extends Component {
     public void update() {
         if (currentAnimation != null) {
             stateTime += Gdx.graphics.getDeltaTime();
-            if (currentAnimation.getAnimation().isAnimationFinished(stateTime) && sr.getTextureRegion() != def) {
+            /*if (currentAnimation.getAnimation().isAnimationFinished(stateTime) && sr.getTextureRegion() != def) {
                 sr.setTexture(def);
                 setCurrentAnimation(-1);
-            }
+            }*/
         }
     }
 
